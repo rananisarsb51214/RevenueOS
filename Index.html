@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevenueOS — AI Revenue Engine</title>
+<style>
+:root{
+  --bg:#0a0e17;--panel:#111827;--panel2:#151e2f;--line:#263248;--text:#edf3ff;
+  --muted:#8d9ab2;--accent:#76f2bb;--blue:#78a9ff;--violet:#a98bff;--amber:#ffc96b;
+  --red:#ff7e8d;--shadow:0 18px 55px rgba(0,0,0,.24);--radius:18px
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 78% -10%,#1a3152 0,transparent 32%),var(--bg);color:var(--text);font:14px Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+.sidebar{width:248px;border-right:1px solid var(--line);padding:27px 16px;display:flex;flex-direction:column;background:rgba(10,14,23,.78);position:fixed;inset:0 auto 0 0;z-index:10}
+.brand{display:flex;align-items:center;gap:11px;padding:0 13px 32px}
+.logo{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--blue));position:relative;box-shadow:0 0 28px rgba(118,242,187,.25)}
+.logo:after{content:"";position:absolute;width:12px;height:12px;border:3px solid #07131a;border-radius:50%;left:8px;top:8px}
+.brand strong{font-size:17px;letter-spacing:-.5px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.nav-label{font-size:10px;color:#65728a;text-transform:uppercase;letter-spacing:1.4px;padding:17px 13px 9px}
+nav a{display:flex;align-items:center;gap:12px;color:var(--muted);padding:11px 13px;border-radius:11px;text-decoration:none;margin:3px 0;transition:.2s}
+nav a:hover,nav a.active{color:var(--text);background:linear-gradient(90deg,#1d3446,transparent)}
+nav a.active{box-shadow:inset 2px 0 var(--accent)}
+.icon{width:18px;text-align:center;font-size:16px}
+.sidebar-foot{margin-top:auto;border:1px solid var(--line);background:#101927;border-radius:14px;padding:13px}
+.env{display:flex;align-items:center;gap:7px;color:var(--accent);font-size:11px}.dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+.sidebar-foot p{color:var(--muted);font-size:11px;line-height:1.5;margin:9px 0 0}
+.main{margin-left:248px;width:calc(100% - 248px);padding:26px 34px 45px;max-width:1600px}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+.crumb{color:var(--muted);font-size:12px}.crumb b{color:var(--text);font-weight:500}
+.actions{display:flex;gap:10px;align-items:center}
+.btn{border:1px solid var(--line);background:#141e2d;color:var(--text);padding:10px 14px;border-radius:10px;transition:.2s}
+.btn:hover{border-color:#5f779b;transform:translateY(-1px)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#07151b;font-weight:700}.btn.blue{background:#223b6a;border-color:#456cb1}
+h1{font-size:30px;letter-spacing:-1.3px;margin:0 0 8px}.subtitle{color:var(--muted);margin:0 0 26px}
+.status{display:inline-flex;align-items:center;gap:7px;border:1px solid #245944;background:#10271f;color:var(--accent);padding:7px 10px;border-radius:20px;font-size:11px}
+.grid{display:grid;gap:16px}.metrics{grid-template-columns:repeat(4,1fr);margin-bottom:18px}
+.card{background:linear-gradient(145deg,rgba(22,32,49,.95),rgba(14,21,33,.95));border:1px solid var(--line);border-radius:var(--radius);padding:19px;box-shadow:var(--shadow)}
+.metric-label{color:var(--muted);font-size:12px;display:flex;justify-content:space-between}.metric-value{font-size:27px;font-weight:700;margin:12px 0 7px;letter-spacing:-1px}.trend{font-size:11px;color:var(--accent)}.trend.down{color:var(--red)}
+.content{grid-template-columns:minmax(0,1.65fr) minmax(300px,.9fr)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.card-title{font-size:15px;font-weight:650}.card-sub{font-size:11px;color:var(--muted);margin-top:5px}
+.filters{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}.filter{background:#0d1522;border:1px solid var(--line);border-radius:8px;color:var(--muted);padding:8px 10px;outline:none}.filter:focus{border-color:var(--blue)}
+.table-wrap{overflow-x:auto}.table{width:100%;border-collapse:collapse;min-width:680px}.table th{text-align:left;color:#74829a;font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}.table td{padding:15px 10px;border-bottom:1px solid #202b3d;vertical-align:middle}.table tr:last-child td{border-bottom:0}.opp-name{font-weight:600}.opp-name span{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-weight:400}
+.score{display:flex;align-items:center;gap:9px}.score-num{font-weight:700;color:var(--accent);min-width:29px}.bar{height:5px;width:62px;background:#253044;border-radius:5px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--accent));border-radius:5px}
+.pill{display:inline-block;font-size:10px;padding:5px 8px;border-radius:14px;background:#172338;color:#9bb8ea}.pill.green{color:var(--accent);background:#113127}.pill.amber{color:var(--amber);background:#352c18}.pill.red{color:var(--red);background:#351d29}
+.row-action{border:0;background:transparent;color:var(--blue);font-size:12px}.empty{padding:35px;text-align:center;color:var(--muted)}
+.funnel{display:flex;flex-direction:column;gap:16px}.stage-row{display:flex;align-items:center;gap:10px}.stage-label{width:95px;color:var(--muted);font-size:11px}.stage-track{height:26px;flex:1;background:#1a2536;border-radius:6px;overflow:hidden}.stage-fill{height:100%;display:flex;align-items:center;padding-left:10px;font-size:11px;color:#08121b;font-weight:700;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--accent));transition:width 1s ease}.stage-count{width:28px;text-align:right;font-weight:600}
+.flow{display:flex;flex-direction:column;gap:0;margin-top:5px}.flow-step{display:flex;gap:12px;position:relative;padding-bottom:19px}.flow-step:not(:last-child):before{content:"";position:absolute;left:12px;top:26px;height:calc(100% - 8px);border-left:1px dashed #3c526f}.flow-icon{z-index:1;width:25px;height:25px;border-radius:8px;background:#1b3652;color:var(--blue);display:grid;place-items:center;font-size:12px}.flow-step.done .flow-icon{background:#133b2e;color:var(--accent)}.flow-step h4{margin:1px 0 3px;font-size:12px}.flow-step p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
+.bottom{grid-template-columns:1fr 1fr;margin-top:16px}.mini-chart{height:155px;display:flex;align-items:end;gap:8px;padding:18px 5px 25px;border-bottom:1px solid var(--line);background:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,#202b3d 38px)}
+.bar-col{flex:1;height:100%;display:flex;align-items:end;gap:5px}.bar-col i{display:block;flex:1;border-radius:4px 4px 0 0;background:linear-gradient(var(--blue),#384f92);min-height:6px}.bar-col i:last-child{background:linear-gradient(var(--accent),#2a876e)}.chart-labels{display:flex;justify-content:space-between;color:#687792;font-size:10px;padding-top:8px}
+.toggle{width:35px;height:19px;border-radius:20px;background:#32405a;display:inline-block;padding:3px;vertical-align:middle}.toggle i{display:block;background:#91a3c3;width:13px;height:13px;border-radius:50%;transition:.2s}.toggle.on{background:#23805d}.toggle.on i{margin-left:16px;background:var(--accent)}
+.toast{position:fixed;right:25px;bottom:25px;background:#172b40;border:1px solid #3f678d;box-shadow:var(--shadow);padding:14px 17px;border-radius:12px;transform:translateY(100px);opacity:0;transition:.3s;z-index:30}.toast.show{transform:translateY(0);opacity:1}.toast b{display:block;font-size:12px}.toast span{font-size:11px;color:var(--muted)}
+.modal-bg{display:none;position:fixed;inset:0;background:#04070dcc;z-index:20;place-items:center;padding:20px}.modal-bg.show{display:grid}.modal{width:min(560px,100%);background:#111b2b;border:1px solid #344762;border-radius:18px;padding:24px;box-shadow:0 25px 90px #000}.modal h2{margin:0 0 5px}.modal p{color:var(--muted);line-height:1.5}.checks{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:18px 0}.check{background:#0d1522;border:1px solid var(--line);padding:11px;border-radius:9px;font-size:11px;color:#b8c4d8}.check b{display:block;color:var(--accent);font-size:13px;margin-top:4px}
+@media(max-width:1050px){.metrics{grid-template-columns:repeat(2,1fr)}.content{grid-template-columns:1fr}.bottom{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.sidebar{width:65px;padding:20px 8px}.brand{padding:0 7px 27px}.brand div:not(.logo),.nav-label,nav a span,.sidebar-foot{display:none}.brand{justify-content:center}.main{margin-left:65px;width:calc(100% - 65px);padding:20px 14px 35px}.topbar{margin-bottom:24px}.topbar .actions .btn:first-child{display:none}h1{font-size:25px}.metrics{grid-template-columns:1fr 1fr;gap:10px}.metric-value{font-size:21px}.card{padding:15px}.bottom{grid-template-columns:1fr}.actions{gap:5px}.actions .btn{padding:9px}.checks{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="logo"></div><div><strong>RevenueOS</strong><small>AI Revenue Engine</small></div></div>
+    <div class="nav-label">Workspace</div>
+    <nav>
+      <a class="active" href="#overview"><span class="icon">◈</span><span>Overview</span></a>
+      <a href="#opportunities"><span class="icon">⌕</span><span>Opportunities</span></a>
+      <a href="#workflows"><span class="icon">◎</span><span>Workflows</span></a>
+      <a href="#analytics"><span class="icon">⌁</span><span>Analytics</span></a>
+    </nav>
+    <div class="nav-label">Governance</div>
+    <nav>
+      <a href="#compliance"><span class="icon">✓</span><span>Compliance</span></a>
+      <a href="#settings"><span class="icon">⚙</span><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-foot"><div class="env"><i class="dot"></i> Sandbox mode</div><p>Payment events are simulated. No financial records are altered.</p></div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="crumb">Workspace / <b>Revenue command center</b></div>
+      <div class="actions"><button class="btn" id="refresh">↻ &nbsp;Refresh signals</button><button class="btn primary" id="newOpp">＋ New opportunity</button></div>
+    </div>
+
+    <section id="overview">
+      <div style="display:flex;justify-content:space-between;align-items:start;gap:15px;flex-wrap:wrap">
+        <div><h1>Revenue command center</h1><p class="subtitle">Discover, validate, and execute compliant revenue opportunities.</p></div>
+        <div class="status"><i class="dot"></i> All systems operational</div>
+      </div>
+      <div class="grid metrics">
+        <div class="card"><div class="metric-label">Verified revenue <span>ⓘ</span></div><div class="metric-value" id="revenue">$24,860</div><div class="trend">↑ 18.4% vs last period</div></div>
+        <div class="card"><div class="metric-label">Active opportunities <span>◉</span></div><div class="metric-value" id="oppCount">12</div><div class="trend">↑ 3 qualified this week</div></div>
+        <div class="card"><div class="metric-label">Blended ROI <span>⌁</span></div><div class="metric-value">4.8x</div><div class="trend">↑ 0.6x improvement</div></div>
+        <div class="card"><div class="metric-label">Automation coverage <span>⚡</span></div><div class="metric-value">76%</div><div class="trend">↑ 9% this month</div></div>
+      </div>
+    </section>
+
+    <div class="grid content">
+      <section class="card" id="opportunities">
+        <div class="card-head"><div><div class="card-title">Opportunity pipeline</div><div class="card-sub">Ranked by transparent score and threshold checks</div></div><button class="btn" id="export">Export CSV</button></div>
+        <div class="filters"><input class="filter" id="search" placeholder="⌕  Search opportunities..." /><select class="filter" id="stage"><option value="all">All stages</option><option>Qualified</option><option>Validation</option><option>Approved</option><option>Rejected</option></select><select class="filter" id="sort"><option value="score">Sort: score</option><option value="margin">Sort: margin</option><option value="risk">Sort: risk</option></select></div>
+        <div class="table-wrap"><table class="table"><thead><tr><th>Opportunity</th><th>Score</th><th>Model</th><th>Margin</th><th>Risk</th><th>Status</th><th></th></tr></thead><tbody id="oppTable"></tbody></table></div>
+      </section>
+
+      <section class="card" id="workflows">
+        <div class="card-head"><div><div class="card-title">Engine flow</div><div class="card-sub">Guardrailed execution lifecycle</div></div><span class="pill green">LIVE</span></div>
+        <div class="flow">
+          <div class="flow-step done"><div class="flow-icon">✓</div><div><h4>Intent engine</h4><p>Goal interpreted: grow compliant recurring revenue</p></div></div>
+          <div class="flow-step done"><div class="flow-icon">✓</div><div><h4>Demand analysis</h4><p>12 opportunities scored from market signals</p></div></div>
+          <div class="flow-step done"><div class="flow-icon">✓</div><div><h4>Risk & compliance check</h4><p>All active candidates pass policy thresholds</p></div></div>
+          <div class="flow-step"><div class="flow-icon">→</div><div><h4>Human approval gate</h4><p>Approved plans can activate an allowed workflow</p></div></div>
+          <div class="flow-step"><div class="flow-icon">○</div><div><h4>Verified payment event</h4><p>Webhook confirmation required before attribution</p></div></div>
+        </div>
+        <div style="margin-top:2px;border-top:1px solid var(--line);padding-top:15px;display:flex;justify-content:space-between;align-items:center"><span style="color:var(--muted);font-size:11px">Auto-optimization</span><span class="toggle on" id="toggle"><i></i></span></div>
+      </section>
+    </div>
+
+    <div class="grid bottom" id="analytics">
+      <section class="card"><div class="card-head"><div><div class="card-title">Revenue performance</div><div class="card-sub">Verified orders only · trailing 7 days</div></div><span class="pill">USD</span></div><div class="mini-chart"><div class="bar-col"><i style="height:38%"></i><i style="height:45%"></i></div><div class="bar-col"><i style="height:49%"></i><i style="height:54%"></i></div><div class="bar-col"><i style="height:43%"></i><i style="height:62%"></i></div><div class="bar-col"><i style="height:59%"></i><i style="height:68%"></i></div><div class="bar-col"><i style="height:64%"></i><i style="height:75%"></i></div><div class="bar-col"><i style="height:70%"></i><i style="height:82%"></i></div><div class="bar-col"><i style="height:78%"></i><i style="height:94%"></i></div></div><div class="chart-labels"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div></section>
+      <section class="card" id="compliance"><div class="card-head"><div><div class="card-title">Unit economics snapshot</div><div class="card-sub">Current approved portfolio</div></div><span class="pill green">Healthy</span></div><div style="display:grid;gap:13px;margin-top:5px"><div class="metric-label">Average customer acquisition cost <b style="color:var(--text)">$42.80</b></div><div style="height:6px;background:#253044;border-radius:5px"><i style="display:block;width:34%;height:100%;background:var(--blue);border-radius:5px"></i></div><div class="metric-label">Gross margin <b style="color:var(--text)">74.6%</b></div><div style="height:6px;background:#253044;border-radius:5px"><i style="display:block;width:75%;height:100%;background:var(--accent);border-radius:5px"></i></div><div class="metric-label">Recurring revenue mix <b style="color:var(--text)">61.2%</b></div><div style="height:6px;background:#253044;border-radius:5px"><i style="display:block;width:61%;height:100%;background:var(--violet);border-radius:5px"></i></div><p style="color:var(--muted);font-size:11px;margin:5px 0 0">Minimum profitability: 30% margin · Maximum risk: Medium · Human approval: Required</p></div></section>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"><b>Signals refreshed</b><span>Opportunity scores and compliance checks are up to date.</span></div>
+<div class="modal-bg" id="modalBg"><div class="modal"><div style="display:flex;justify-content:space-between"><div><h2 id="modalTitle">Opportunity details</h2><div class="card-sub">Review before any workflow is activated</div></div><button class="btn" id="closeModal">×</button></div><p id="modalText"></p><div class="checks"><div class="check">Demand signal<b id="mDemand">High</b></div><div class="check">Gross margin<b id="mMargin">72%</b></div><div class="check">Compliance status<b>Passed</b></div><div class="check">Automation potential<b id="mAuto">88%</b></div></div><div style="display:flex;justify-content:flex-end;gap:9px"><button class="btn" id="cancel">Cancel</button><button class="btn primary" id="approve">Approve workflow</button></div></div></div>
+<script>
+const opportunities=[
+ {name:"AI proposal copilot",desc:"B2B productivity · 1.8k qualified searches",score:92,model:"SaaS",margin:"82%",risk:"Low",status:"Qualified",demand:"High",auto:"91%"},
+ {name:"Local service lead desk",desc:"SMB operations · recurring pain point",score:86,model:"Lead gen",margin:"68%",risk:"Low",status:"Validation",demand:"High",auto:"76%"},
+ {name:"Creator analytics reports",desc:"Audience insights · weekly purchase intent",score:79,model:"Subscription",margin:"74%",risk:"Medium",status:"Approved",demand:"Medium",auto:"88%"},
+ {name:"Compliance template library",desc:"Legal ops · expert-reviewed resources",score:73,model:"Digital product",margin:"91%",risk:"Medium",status:"Qualified",demand:"Medium",auto:"84%"},
+ {name:"Unverified trading alerts",desc:"Financial promotion · insufficient evidence",score:18,model:"Subscription",margin:"—",risk:"High",status:"Rejected",demand:"Medium",auto:"62%"}
+];
+const tbody=document.getElementById("oppTable");
+function render(){
+ let q=document.getElementById("search").value.toLowerCase(), st=document.getElementById("stage").value, sort=document.getElementById("sort").value;
+ let arr=opportunities.filter(o=>(o.name+o.desc).toLowerCase().includes(q)&&(st==="all"||o.status===st));
+ arr.sort((a,b)=>sort==="margin"?parseInt(b.margin||0)-parseInt(a.margin||0):sort==="risk"?({Low:1,Medium:2,High:3}[a.risk]-({Low:1,Medium:2,High:3}[b.risk])):b.score-a.score);
+ tbody.innerHTML=arr.length?arr.map((o,i)=>`<tr><td><div class="opp-name">${o.name}<span>${o.desc}</span></div></td><td><div class="score"><span class="score-num">${o.score}</span><div class="bar"><i style="width:${o.score}%"></i></div></div></td><td>${o.model}</td><td>${o.margin}</td><td><span class="pill ${o.risk==="Low"?"green":o.risk==="High"?"red":"amber"}">${o.risk}</span></td><td><span class="pill ${o.status==="Rejected"?"red":o.status==="Approved"?"green":""}">${o.status}</span></td><td><button class="row-action" data-i="${opportunities.indexOf(o)}">Review</button></td></tr>`).join(""):`<tr><td colspan="7" class="empty">No opportunities match these filters.</td></tr>`;
+ document.querySelectorAll(".row-action").forEach(b=>b.onclick=()=>openModal(opportunities[b.dataset.i]));
+}
+function openModal(o){
+ document.getElementById("modalTitle").textContent=o.name;document.getElementById("modalText").textContent=`Score ${o.score}/100. This opportunity passed the current demand, monetization, cost, margin, automation, and compliance gate${o.status==="Rejected"?" exception review is required before reconsideration.":"s."}`;
+ document.getElementById("mDemand").textContent=o.demand;document.getElementById("mMargin").textContent=o.margin;document.getElementById("mAuto").textContent=o.auto;
+ document.getElementById("approve").style.display=o.status==="Rejected"?"none":"block";document.getElementById("modalBg").classList.add("show");
+ document.getElementById("approve").onclick=()=>{o.status="Approved";render();closeModal();notify("Workflow approved","Execution is queued behind the required human approval and payment verification gates.")};
+}
+function closeModal(){document.getElementById("modalBg").classList.remove("show")}
+function notify(a,b){let t=document.getElementById("toast");t.innerHTML=`<b>${a}</b><span>${b}</span>`;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3500)}
+["search","stage","sort"].forEach(id=>document.getElementById(id).oninput=render);
+document.getElementById("closeModal").onclick=closeModal;document.getElementById("cancel").onclick=closeModal;
+document.getElementById("modalBg").onclick=e=>{if(e.target.id==="modalBg")closeModal()};
+document.getElementById("refresh").onclick=()=>notify("Signals refreshed","Demand, unit economics, and compliance checks are up to date.");
+document.getElementById("export").onclick=()=>notify("Export prepared","CSV contains opportunity scores and non-sensitive operational metrics.");
+document.getElementById("newOpp").onclick=()=>notify("Discovery intake ready","Connect a permitted market signal source to begin a new validation brief.");
+document.getElementById("toggle").onclick=function(){this.classList.toggle("on");notify(this.classList.contains("on")?"Optimization enabled":"Optimization paused","Changes require review before activation.")};
+render();
+</script>
+</body>
+</html>
